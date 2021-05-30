@@ -4,11 +4,11 @@ pragma experimental ABIEncoderV2;
 import "./MafiaCookies.sol";
 
 contract Mafia {
-    MafiaCookies token;
+    MafiaCookies token = new MafiaCookies();
 
-    constructor (MafiaCookies _token) public {
+    /*constructor (MafiaCookies _token) public {
         token = _token;
-    }
+    }*/
 
     // возможные роли и стадии игры
     enum Roles { 

@@ -17,7 +17,6 @@ contract('Mafia', (accounts) => {
         it('should put 100 MC to each account at start', async () => {
             for (let i = 0; i < 10; ++i) {
                 let balance = await instance.lookBalance(accounts[i]);
-                //let balance = (await mc.balanceOf.call(accounts[i])).toString();
                 assert.equal(balance, '100', `100 wasn't in the ${i} account`);
             }
         });
@@ -93,7 +92,6 @@ contract('Mafia', (accounts) => {
                 assert.equal(balance, 0, 'bets taken unsuccessfully');
                 /*let all = await mc.allowance(accounts[i], instance.address);
                 assert.equal(all, 100, 'err');*/
-                //await mc.transferFrom(accounts[i], address(this), 100);
             }
         });
         /*it('should have mafias bets', async () => {
