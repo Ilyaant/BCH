@@ -1,11 +1,13 @@
 const Mafia = artifacts.require("Mafia");
 const MC = artifacts.require("MafiaCookies");
 
-contract('Mafia', (accounts) => {
+contract('Mafia - basic', (accounts) => {
     describe('Starting tokens', () => {
         let instance;
+        let mc;
         before(async () => {
             instance = await Mafia.deployed();
+            mc = await MC.at(await instance.token());
             for (let i = 0; i < 10; ++i) {
                 await instance.Ask({from: accounts[i]});
             }
@@ -16,13 +18,13 @@ contract('Mafia', (accounts) => {
         });
         it('should put 100 MC to each account at start', async () => {
             for (let i = 0; i < 10; ++i) {
-                let balance = await instance.lookBalance(accounts[i]);
-                assert.equal(balance, '100', `100 wasn't in the ${i} account`);
+                let balance = await mc.balanceOf(accounts[i]);
+                assert.equal(balance, 100, `100 wasn't in the ${i} account`);
             }
         });
     });
     
-    /*describe('Players turns', () => {
+    describe('Players turns', () => {
         let instance;
         beforeEach(async () => {
             instance = await Mafia.deployed();
@@ -66,14 +68,16 @@ contract('Mafia', (accounts) => {
             const r = instance.getRole.call(1).toString();
             assert.equal(check_index, r, 'policeman is not able to find mafia');
         });
-    });*/
+    });
+});
 
+contract ('Mafia - bets and prizes', (accounts) => {
     describe('Bets', () => {
         let instance;
         let mc;
         beforeEach(async () => {
-            mc = await MC.deployed();
             instance = await Mafia.deployed();
+            mc = await MC.at(await instance.token());
             for (let i = 0; i < 10; ++i) {
                 await instance.Ask({from: accounts[i]});
             }
@@ -88,32 +92,32 @@ contract('Mafia', (accounts) => {
         it('should take bets', async () => {
             for (let i = 0; i < 10; ++i) {
                 await instance.Bet(100, {from: accounts[i]});
-                let balance = await instance.lookBalance(accounts[i]);
-                assert.equal(balance, 0, 'bets taken unsuccessfully');
-                /*let all = await mc.allowance(accounts[i], instance.address);
-                assert.equal(all, 100, 'err');*/
+                let balance = (await mc.balanceOf(accounts[i])).toString();
+                assert.equal(balance, '0', 'bets taken unsuccessfully');
             }
         });
         /*it('should have mafias bets', async () => {
             for (let i = 0; i < 10; ++i) {
                 await instance.Bet(100, {from: accounts[i]});
             }
-            assert.equal(instance.Mafia_Bets(), 300, 'mafias bets count wrong');
+            assert.equal(instance.mafia_bets(), 300, 'mafias bets count wrong');
         });
         it('should have citizens bets', async () => {
             for (let i = 0; i < 10; ++i) {
                 await instance.Bet(100, {from: accounts[i]});
             }
-            assert.equal(instance.Citizen_Bets(), 700, 'citizen bets count wrong');
+            assert.equal(instance.citizen_bets(), 700, 'citizen bets count wrong');
         });*/
     });
 
-    /*describe('Prizes', () => {
+    describe('Prizes', () => {
         let instance;
+        let mc;
         beforeEach(async () => {
             instance = await Mafia.deployed();
+            mc = await MC.at(await instance.token());
             for (let i = 0; i < 10; ++i) {
-                await instance.tokApprove(instance.address, 100, {from: accounts[i]});
+                await mc.approve(instance.address, 100, {from: accounts[i]});
             }
             for (let i = 0; i < 10; ++i) {
                 await instance.Ask({from: accounts[i]});
@@ -129,8 +133,8 @@ contract('Mafia', (accounts) => {
             }
             await instance.MafiaWin();
             for (let i = 0; i < 3; ++i) {
-                let balance = await instance.lookBalance(accounts[i]);
-                assert.equal(balance, 333, 'mafias havent received the prize');
+                let balance = (await mc.balanceOf(accounts[i])).toString();
+                assert.equal(balance, '333', 'mafias havent received the prize');
             }
         });
         it('should give prize to citizens if they win', async () => {
@@ -139,9 +143,9 @@ contract('Mafia', (accounts) => {
             }
             await instance.CitizenWin();
             for (let i = 3; i < 10; ++i) {
-                let balance = await instance.lookBalance(accounts[i]);
-                assert.equal(balance, 142, 'citizens havent received the prize');
+                let balance = (await mc.balanceOf(accounts[i])).toString();
+                assert.equal(balance, '142', 'citizens havent received the prize');
             }
         });
-    });*/
+    });
 });

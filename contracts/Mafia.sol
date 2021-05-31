@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 import "./MafiaCookies.sol";
 
 contract Mafia {
-    MafiaCookies token = new MafiaCookies();
+    MafiaCookies public token = new MafiaCookies();
 
     /*constructor (MafiaCookies _token) public {
         token = _token;
@@ -67,8 +67,8 @@ contract Mafia {
     uint private bank = 0;
     uint private constant min_stake = 100;
     uint private constant welcoming_tokens = 100; // приветственные токены
-    uint private mafia_bets = 0; // ставки мафии
-    uint private citizen_bets = 0; // ставки жителей
+    uint public mafia_bets = 0; // ставки мафии
+    uint public citizen_bets = 0; // ставки жителей
 
     uint[num_of_players] private voted_already; // проголосовавшие игроки
     uint[num_of_players] private voted_for; // игроки, за которых проголосовали
