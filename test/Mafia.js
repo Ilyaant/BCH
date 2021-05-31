@@ -102,13 +102,15 @@ contract ('Mafia - bets and prizes', (accounts) => {
             for (let i = 0; i < 10; ++i) {
                 await instance.Bet(100, {from: accounts[i]});
             }
-            assert.equal(instance.mafia_bets(), 300, 'mafias bets count wrong');
+            const bet = (await instance.mafia_bets()).toString();
+            assert.equal(bet, '300', 'mafias bets count wrong');
         });
         it('should have citizens bets', async () => {
             for (let i = 0; i < 10; ++i) {
                 await instance.Bet(100, {from: accounts[i]});
             }
-            assert.equal(instance.citizen_bets(), 700, 'citizen bets count wrong');
+            const bet = (await instance.citizen_bets()).toString();
+            assert.equal(bet, '700', 'citizen bets count wrong');
         });
     });
 
