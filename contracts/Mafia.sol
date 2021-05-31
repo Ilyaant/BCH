@@ -6,10 +6,6 @@ import "./MafiaCookies.sol";
 contract Mafia {
     MafiaCookies public token = new MafiaCookies();
 
-    /*constructor (MafiaCookies _token) public {
-        token = _token;
-    }*/
-
     // возможные роли и стадии игры
     enum Roles { 
         UNKNOWN,
@@ -45,10 +41,6 @@ contract Mafia {
         else if (ind == 2) return Roles.POLICEMAN;
         else if (ind == 3) return Roles.DOCTOR;
         else return Roles.CITIZEN;
-    }
-
-    function getContractAddr() public view returns (address) {
-        return address(this);
     }
 
     event Log(string _mystring);
@@ -125,28 +117,6 @@ contract Mafia {
             citizen_bets += stake;
         }
         token.transferFrom(msg.sender, address(this), stake);
-    }
-
-    function Mafia_Bets() 
-    public
-    view 
-    returns(uint256) {
-        return mafia_bets;
-    }
-
-    function Citizen_Bets() 
-    public
-    view 
-    returns(uint256) {
-        return citizen_bets;
-    }
-
-    function lookBalance(address addr) public view returns (uint) {
-        return token.balanceOf(addr);
-    }
-
-    function tokApprove(address addr, uint val) public {
-        token.approve(addr, val);
     }
 
     // начало игры

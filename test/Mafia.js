@@ -1,3 +1,5 @@
+const { assert } = require("chai");
+
 const Mafia = artifacts.require("Mafia");
 const MC = artifacts.require("MafiaCookies");
 
@@ -40,32 +42,32 @@ contract('Mafia - basic', (accounts) => {
             await instance.MafiaKill(5);
             await instance.PolicemanFind(5, {from: accounts[8]});
             await instance.DoctorHeal(6, {from: accounts[5]});
-            const check_alive = await instance.getStateP.call(5).toString();
-            const st = await instance.getState.call(0).toString();
+            const check_alive = (await instance.getStateP(5)).toString();
+            const st = (await instance.getState(0)).toString();
             assert.equal(check_alive, st, 'mafia is not able to kill');
         });
         it('should heal', async () => {
             await instance.MafiaKill(5);
             await instance.PolicemanFind(5, {from: accounts[8]});
             await instance.DoctorHeal(5, {from: accounts[5]});
-            const check_alive = await instance.getStateP.call(5).toString();
-            const st = await instance.getState.call(1).toString();
+            const check_alive = (await instance.getStateP(5)).toString();
+            const st = (await instance.getState(1)).toString();
             assert.equal(check_alive, st, 'doctor is not able to heal');
         });
         it('should find citizen', async () => {
             await instance.MafiaKill(5);
             await instance.PolicemanFind(9, {from: accounts[8]});
             await instance.DoctorHeal(5, {from: accounts[5]});
-            const check_index = await instance.getRolesArr.call(9).toString();
-            const r = instance.getRole.call(4).toString();
+            const check_index = (await instance.getRolesArr(9)).toString();
+            const r = (await instance.getRole(4)).toString();
             assert.equal(check_index, r, 'policeman is not able to find citizen');
         });
         it('should find mafia', async () => {
             await instance.MafiaKill(5);
             await instance.PolicemanFind(1, {from: accounts[8]});
             await instance.DoctorHeal(5, {from: accounts[5]});
-            const check_index = await instance.getRolesArr.call(1).toString();
-            const r = instance.getRole.call(1).toString();
+            const check_index = (await instance.getRolesArr(1)).toString();
+            const r = (await instance.getRole(1)).toString();
             assert.equal(check_index, r, 'policeman is not able to find mafia');
         });
     });
@@ -96,7 +98,7 @@ contract ('Mafia - bets and prizes', (accounts) => {
                 assert.equal(balance, '0', 'bets taken unsuccessfully');
             }
         });
-        /*it('should have mafias bets', async () => {
+        it('should have mafias bets', async () => {
             for (let i = 0; i < 10; ++i) {
                 await instance.Bet(100, {from: accounts[i]});
             }
@@ -107,7 +109,7 @@ contract ('Mafia - bets and prizes', (accounts) => {
                 await instance.Bet(100, {from: accounts[i]});
             }
             assert.equal(instance.citizen_bets(), 700, 'citizen bets count wrong');
-        });*/
+        });
     });
 
     describe('Prizes', () => {
